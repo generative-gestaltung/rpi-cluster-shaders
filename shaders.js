@@ -687,7 +687,7 @@ void main(void) {
   void main(void) {
 
  init();
-	vec3 col = vec3(0.03);
+	vec3 col = vec3(0.01);
 
     vec2 center = vec2(110., 280.);
 
@@ -725,6 +725,117 @@ void main(void) {
 
 	  if (dX>(rMax-60.0-B) && dX<(rMax-10.0)){
          col = vec3(0.07, 0.02, 0.04);
+
+  }
+
+    }
+
+
+    gl_FragColor = vec4(col,0.8);
+  }`  ,
+
+    
+      FRAG_15 : `
+
+  void main(void) {
+
+ init();
+	vec3 col = vec3(0.0);
+
+    vec2 center = vec2(110., 180.);
+
+    float phi = atan(coord.y - center.y, coord.x - center.x);
+
+	float t =1.;
+    for (int i=1; i<5; i++) {
+
+
+      float t = 1.0+float(i)*2.;
+      if (t>1000.0) t = 1.0;
+	  //center = vec2(100.+t*2., 480.-t*6.);
+
+      float dX =  l1(100.,coord.x);
+
+     
+      float A =uTime*sin(uTime*1.+phi);
+	  //if(uTime>1000.) uTime/100.;
+	  float B =abs(A)* cos(phi+uTime*2.+phi/10.)*10.;
+      dX += 1.;
+
+
+
+
+      if (dX>0. && dX<300.-A  && coord.x<700.-A && coord.x>200.+B) {
+	  dX=dX+A;
+	  center = vec2(400., 600.);
+      coord.x = coord.x+dX*A;
+		//coord.y = coord.x;
+        col = vec3(0.1);
+
+      }
+
+	  if (dX>400.-A && dX<600. ){
+		dX=dX-A*1.;
+
+		coord.x=coord.x-dX;
+		coord.y= coord.x;
+
+         col = vec3(0.03, 0.04, 0.04);
+
+  }
+
+    }
+
+
+    gl_FragColor = vec4(col,0.8);
+  }`  ,
+
+
+      
+      FRAG_16 : `
+
+  void main(void) {
+
+ init();
+	vec3 col = vec3(0.0);
+
+	vec2 center = vec2(100.,400.);
+	coord.x = 100.;
+	//coord.y = 400.;
+	
+	 float phi = atan(coord.y - center.y, coord.x - center.x);
+
+	float t =1.;
+    for (int i=1; i<5; i++) {
+
+
+      float t = 1.0+float(i)*2.;
+      if (t>1000.0) t = 1.0;
+
+      float dX =  l1(coord.y,coord.x);
+     
+      float A =t*abs(3.*sin(uTime*3.+phi));
+
+	  float B =abs(A)+4.*cos(phi+uTime*0.1+1.4);
+      dX += B+coord.x*A*0.5;
+
+
+
+
+      if (dX>0. && dX<600.  && coord.x<600. && coord.x>200.) {
+       coord.x = coord.x+dX*0.25;
+	   coord.y = coord.y*0.25*A/100.+A;
+	   col = vec3(0.8, 0.04, 0.04);
+
+
+      }
+
+	  if (dX>200.-B && dX<800. && coord.x<200.){
+
+		coord.x=dX+A;
+		coord.y= coord.y-coord.x*B;
+
+         col = vec3(0.);
 
   }
 
