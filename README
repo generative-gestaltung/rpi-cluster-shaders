@@ -1,0 +1,4 @@
+gl-visuals : rpi c code
+
+shader-web-view : webgl shader preview. add shaders to list in shaders.js and select
+  shader to be displayed in main.js.
