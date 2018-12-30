@@ -1,0 +1,196 @@
+<!DOCTYPE HTML>
+<html>
+  <style>
+    body {
+      background-color: black;
+    }
+  </style>
+  <body>
+    <canvas id="myCanvas" width="1" height="10"></canvas>
+
+
+    <script>
+
+		var dt = 0;
+		var t = 0;
+
+    var N_PATHS = 40;
+    var N_COLORS = 4;
+    var R = 2;
+
+    function Visual (x, y, w, h, hidden=false) {
+      this.w = w;
+      this.h = h;
+
+      this.canvas = document.createElement('canvas');
+      this.canvas.id = "CursorLayer";
+      this.canvas.width = this.w;
+      this.canvas.height = this.h;
+      this.canvas.style.zIndex = 8;
+      this.canvas.style.position = "absolute";
+      this.canvas.style.left = x+"px";
+      this.canvas.style.top = y+"px";
+      this.canvas.style.border = "1px solid";
+
+      if (hidden) {
+        this.canvas.style.display = "none";
+      }
+      document.body.appendChild(this.canvas);
+
+      this.context = this.canvas.getContext("2d");
+      this.context.fillStyle = "#000";
+      this.context.fillRect(0,0,this.w, this.h);
+    }
+
+
+    Visual.prototype.draw = function() {
+
+      // context = this.context;
+      for (var i=0; i<N_PATHS; i++) {
+        this.paths[i].draw(i, this.context);
+      }
+    }
+
+    function Path (props) {
+      for (let p of Object.keys(props)) {
+        this[p] = props[p];
+      }
+    }
+
+    Path.prototype.draw = function (i, context) {
+      context.strokeStyle = "rgb("+this.c.r+","+this.c.g+","+this.c.b+")";
+      context.beginPath();
+      context.moveTo(this.x, this.y);
+      this.x += Math.sin(this.phi)*R;
+      this.y += Math.cos(this.phi)*R;
+      this.phi += (0.02+i*0.02)*time*0.09*Math.random();
+      context.lineTo(this.x, this.y);
+
+      context.lineWidth = 1;
+      context.stroke();
+      // context.closePath()
+    }
+
+    var time = 0;
+    var visuals = [];
+    var views = [];
+
+
+
+    function getColor (colors) {
+      var i = Math.floor(Math.random()*(N_COLORS-0.0000001));
+      return colors[i];
+    }
+
+
+    function init() {
+
+      this.paths = [];
+      this.colors = [];
+
+
+      for (var i=0; i<N_COLORS; i++) {
+        this.colors.push({
+          r : Math.round(Math.random()*255),
+          g : Math.round(Math.random()*255),
+          b : Math.round(Math.random()*255)
+        });
+      }
+
+
+      for (var i=0; i<N_PATHS; i++) {
+        this.paths.push(new Path({
+          phi : 0,
+          x : Math.round(Math.random()*this.canvas.width),
+          y : Math.round(Math.random()*this.canvas.height),
+          c : getColor(this.colors)
+        }));
+      }
+    }
+
+
+
+    var N_COLS = 4;
+    var N_ROWS = 2;
+    var VISUAL_W = 340;
+    var VISUAL_H = 340;
+
+    window.onload = function() {
+
+      for (var i=0; i<8; i++) {
+        visuals.push(new Visual (i%4*350, Math.floor(i/4)*350, N_COLS*VISUAL_W, N_ROWS*VISUAL_H, true));
+        views.push(new Visual (i%4*350, Math.floor(i/4)*350, VISUAL_W, VISUAL_H));
+      }
+
+      for (let v of visuals) {
+        v.init = init;
+        v.init();
+      }
+      _draw();
+    }
+
+
+
+
+    function _draw() {
+
+			var newT = performance.now();
+			dt = newT - t;
+			t = newT;
+
+      time += dt;
+
+      for (let v of visuals) {
+        for (var i=0; i<4; i++)
+          v.draw();
+      }
+
+
+      for (var i=0; i<N_COLS; i++) {
+        for (var j=0; j<N_ROWS; j++) {
+
+          var ind = j*N_COLS + i;
+          var sx = i;
+          var sy = j;
+          views[ind].context.putImageData(visuals[ind].context.getImageData(sx*VISUAL_W, sy*VISUAL_H, VISUAL_W, VISUAL_H), 0, 0);
+        }
+      }
+
+      x0 = 0.9;
+      x1 = 2.1;
+      y0 = 0.00;
+      y1 = 2;//+Math.sin(time*0.002)*0.48+0.5;
+
+
+      var w = x1;
+      var h = y1;
+      var sy = y0;
+      var dx0 = x0;
+      var dy0 = y0;
+
+      for (var j=Math.floor(y0); j<Math.ceil(y1); j++) {
+        dx0 = x0;
+        sx = x0;
+        w = x1;
+        for (var i=Math.floor(x0); i<Math.ceil(x1); i++) {
+          var ind = j*N_COLS + i;
+          views[ind].context.putImageData(visuals[1].context.getImageData(sx*VISUAL_W, sy*VISUAL_H, w*VISUAL_W, h*VISUAL_H), dx0*VISUAL_W, dy0*VISUAL_H);
+          dx0 = 0;
+          w -= 1;
+          sx = Math.floor(sx)+1;
+        }
+        sy = Math.floor(sy)+1;
+        dy0 = 0;
+        h -= 1;
+      }
+
+
+      requestAnimationFrame(_draw);
+    };
+
+
+    </script>
+
+  </body>
+
+</html>

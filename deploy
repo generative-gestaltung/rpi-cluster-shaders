@@ -1,0 +1,26 @@
+cp gl-visuals/config00 gl-visuals/config.h
+scp -r gl-visuals/ pi@192.168.1.10:
+
+cp gl-visuals/config01 gl-visuals/config.h
+scp -r gl-visuals/ pi@192.168.1.11:
+
+cp gl-visuals/config02 gl-visuals/config.h
+scp -r gl-visuals/ pi@192.168.1.12:
+
+cp gl-visuals/config03 gl-visuals/config.h
+scp -r gl-visuals/ pi@192.168.1.13:
+
+cp gl-visuals/config04 gl-visuals/config.h
+scp -r gl-visuals/ pi@192.168.1.14:
+
+cp gl-visuals/config05 gl-visuals/config.h
+scp -r gl-visuals/ pi@192.168.1.15:
+
+cp gl-visuals/config06 gl-visuals/config.h
+scp -r gl-visuals/ pi@192.168.1.16:
+
+cp gl-visuals/config07 gl-visuals/config.h
+scp -r gl-visuals/ pi@192.168.1.17:
+
+cp gl-visuals/config08 gl-visuals/config.h
+scp -r gl-visuals/ pi@192.168.1.18:

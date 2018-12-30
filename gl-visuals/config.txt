@@ -1,0 +1,6 @@
+W 1280
+H 1024
+X 0
+Y 0
+N_SHADERS 4
+SHADER_PATH shaders
